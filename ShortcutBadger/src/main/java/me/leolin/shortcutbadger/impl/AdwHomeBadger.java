@@ -1,33 +1,38 @@
 package me.leolin.shortcutbadger.impl;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import me.leolin.shortcutbadger.ShortcutBadgeException;
-import me.leolin.shortcutbadger.ShortcutBadger;
 
 import java.util.Arrays;
 import java.util.List;
 
+import me.leolin.shortcutbadger.Badger;
+import me.leolin.shortcutbadger.ShortcutBadgeException;
+import me.leolin.shortcutbadger.util.BroadcastHelper;
+
 /**
  * @author Gernot Pansy
  */
-public class AdwHomeBadger extends ShortcutBadger {
+public class AdwHomeBadger implements Badger {
 
     public static final String INTENT_UPDATE_COUNTER = "org.adw.launcher.counter.SEND";
     public static final String PACKAGENAME = "PNAME";
+    public static final String CLASSNAME = "CNAME";
     public static final String COUNT = "COUNT";
 
-    public AdwHomeBadger(Context context) {
-        super(context);
-    }
-
     @Override
-    protected void executeBadge(int badgeCount) throws ShortcutBadgeException {
+    public void executeBadge(Context context, ComponentName componentName, int badgeCount) throws ShortcutBadgeException {
 
         Intent intent = new Intent(INTENT_UPDATE_COUNTER);
-        intent.putExtra(PACKAGENAME, getContextPackageName());
+        intent.putExtra(PACKAGENAME, componentName.getPackageName());
+        intent.putExtra(CLASSNAME, componentName.getClassName());
         intent.putExtra(COUNT, badgeCount);
-        mContext.sendBroadcast(intent);
+        if (BroadcastHelper.canResolveBroadcast(context, intent)) {
+            context.sendBroadcast(intent);
+        } else {
+            throw new ShortcutBadgeException("unable to resolve intent: " + intent.toString());
+        }
     }
 
     @Override

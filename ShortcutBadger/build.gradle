@@ -10,9 +10,14 @@ android {
         targetSdkVersion 19
         versionCode 1
         versionName "1.0"
+        consumerProguardFiles 'proguard-rules.pro'
     }
-    
+
+    lintOptions {
+        abortOnError false
+    }
 
 }
 
-apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
+//apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
+apply from: './mvn-push.gradle'
