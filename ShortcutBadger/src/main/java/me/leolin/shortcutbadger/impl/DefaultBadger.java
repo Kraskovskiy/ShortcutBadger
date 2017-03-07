@@ -37,4 +37,9 @@ public class DefaultBadger implements Badger {
     public List<String> getSupportLaunchers() {
         return new ArrayList<String>(0);
     }
+
+    boolean isSupported(Context context) {
+        Intent intent = new Intent(INTENT_ACTION);
+        return BroadcastHelper.canResolveBroadcast(context, intent);
+    }
 }
